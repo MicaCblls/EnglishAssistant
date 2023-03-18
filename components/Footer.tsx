@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="text-center h-16 sm:h-20 w-full sm:pt-2 pt-4 border-t mt-5 flex sm:flex-row flex-col justify-between items-center px-3 space-y-3 sm:mb-0 mb-3">
+    <footer className="text-center sm:h-20 w-full sm:pt-2 pt-4 border-t mt-2 flex sm:flex-row flex-col justify-between items-center px-3 space-y-3 sm:mb-0 mb-3">
       <div>
         Powered by{" "}
         <a
@@ -25,9 +25,10 @@ export default function Footer() {
       </div>
       <div className="flex space-x-4 pb-4 sm:pb-0">
         <Link
-          href="https://twitter.com/nutlope"
+          href="https://www.linkedin.com/in/micaela-ceballos-036b4a21b/"
           className="group"
-          aria-label="TaxPal on Twitter"
+          aria-label="MicaCeballos on LinkedIn"
+          target="_blank"
         >
           <svg
             aria-hidden="true"
@@ -37,9 +38,10 @@ export default function Footer() {
           </svg>
         </Link>
         <Link
-          href="https://github.com/Nutlope/twitterbio"
+          href="https://github.com/MicaCblls/EnglishAssistant"
           className="group"
-          aria-label="TaxPal on GitHub"
+          aria-label="MicaCeballos on GitHub"
+          target="_blank"
         >
           <svg
             aria-hidden="true"

@@ -9,7 +9,12 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: { cyan: "#ecfeff", darkCyan: "#155e75" },
+      fontFamily: {
+        garamond: ["Garamond", "serif"],
+      },
+    },
   },
   plugins: [require("@tailwindcss/forms"), require("@headlessui/tailwindcss")],
 };

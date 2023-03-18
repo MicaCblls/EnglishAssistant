@@ -4,32 +4,46 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import DropDown, { VibeType } from "../components/DropDown";
+import DropDown, { LanguageType } from "../components/DropDown";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import LoadingDots from "../components/LoadingDots";
 import ResizablePanel from "../components/ResizablePanel";
 
+const gradient = {
+  background: "linear-gradient(180deg, #22d3ee,#155e75)",
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  color: "transparent",
+};
+
+const slide = {
+  backgroundPosition: "0% 0%",
+  transition: {
+    repeat: Infinity,
+    duration: 2,
+    ease: "easeInOut",
+  },
+  backgroundPosition2: "100% 100%",
+};
+
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
-  const [ingredients, setIngredients] = useState("");
-  const [vibe, setVibe] = useState<Number>(0);
-  const [generatedFoods, setGeneratedFoods] = useState<String>("");
+  const [request, setRequest] = useState("");
+  const [language, setLanguages] = useState<LanguageType>("English");
+  const [generatedResponse, setGeneratedResponse] = useState("");
 
-  console.log("Streamed response: ", generatedFoods);
+  const prompt = `Hi ChatGPT, I need your help with a translation and explanation about a specific topic in ${language}. The topic is ${request}, and I need a thorough explanation in English.`;
 
-  /* const prompt =
-    vibe === "Funny"
-      ? `Generate 2 funny twitter bios with no hashtags and clearly labeled "1." and "2.". Make sure there is a joke in there and it's a little ridiculous. Make sure each generated bio is at max 20 words and base it on this context: ${ingredients}${
-          ingredients.slice(-1) === "." ? "" : "."
-        }`
-      : `Generate 2 ${vibe} twitter bios with no hashtags and clearly labeled "1." and "2.". Make sure each generated bio is at least 14 words and at max 20 words and base them on this context: ${ingredients}${
-          ingredients.slice(-1) === "." ? "" : "."
-        }`; */
+  const showToast = () => {
+    toast("Please enter the topic you need help with.", {
+      position: "top-center",
+    });
+  };
 
   const generateBio = async (e: any) => {
     e.preventDefault();
-    setGeneratedFoods("");
+    setGeneratedResponse("");
     setLoading(true);
     const response = await fetch("/api/generate", {
       method: "POST",
@@ -60,24 +74,28 @@ const Home: NextPage = () => {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
       const chunkValue = decoder.decode(value);
-      setGeneratedFoods((prev) => prev + chunkValue);
+      setGeneratedResponse((prev) => prev + chunkValue);
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
+    <div className="flex bg-cyan mx-auto flex-col items-center justify-center py-2 min-h-screen w-full">
       <Head>
-        <title>Food Savior</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Language Assistant</title>
+        <link rel="icon" href="../translateIcon.ico" />
       </Head>
 
       <Header />
-      <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
-        <h1 className="sm:text-6xl text-4xl max-w-2xl font-bold text-slate-900">
-          Generate food options in seconds.
-        </h1>
+      <main className="flex flex-1 max-w-5xl flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
+        <motion.h1
+          className="sm:text-6xl text-4xl max-w-2xl font-bold text-slate-900 h-20"
+          style={gradient}
+          animate={slide}
+        >
+          Hi! How can I help you?
+        </motion.h1>
         <div className="max-w-xl w-full">
           <div className="flex mt-10 items-center space-x-3">
             <Image
@@ -87,39 +105,39 @@ const Home: NextPage = () => {
               alt="1 icon"
               className="mb-5 sm:mb-0"
             />
-            <p className="text-left font-medium">
-              Copy your current ingredients.
+            <p className="text-left font-medium text-lg">
+              Enter the topic you need help with.
             </p>
           </div>
           <textarea
-            value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
+            value={request}
+            onChange={(e) => setRequest(e.target.value)}
             rows={4}
             className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
-            placeholder={
-              "e.g. Senior Developer Advocate @vercel. Tweeting about web development, AI, and React / Next.js. Writing nutlope.substack.com."
-            }
+            placeholder={"e.g. French cuisine"}
           />
           <div className="flex mb-5 items-center space-x-3">
             <Image src="/2-black.png" width={30} height={30} alt="1 icon" />
-            <p className="text-left font-medium">Insert the amount of guests</p>
+            <p className="text-left font-medium text-lg">Select the language</p>
           </div>
           <div className="block">
-            {/*   <DropDown vibe={vibe} setVibe={(newVibe) => setVibe(newVibe)} /> */}
-            <input type="number" name="" id="" />
+            <DropDown
+              vibe={language}
+              setVibe={(newVibe) => setLanguages(newVibe)}
+            />
           </div>
 
           {!loading && (
             <button
-              className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-              onClick={(e) => generateBio(e)}
+              className="bg-darkCyan rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-darkCyan/80 w-full"
+              onClick={(e) => (request.length ? generateBio(e) : showToast())}
             >
-              Generate options &rarr;
+              Generate response &rarr;
             </button>
           )}
           {loading && (
             <button
-              className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
+              className="bg-darkCyan rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-darkCyan/80 w-full"
               disabled
             >
               <LoadingDots color="white" style="large" />
@@ -135,33 +153,25 @@ const Home: NextPage = () => {
         <ResizablePanel>
           <AnimatePresence mode="wait">
             <motion.div className="space-y-10 my-10">
-              {generatedFoods && (
+              {generatedResponse && (
                 <>
                   <div>
                     <h2 className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto">
-                      Your generated foods
+                      Your generated response
                     </h2>
                   </div>
                   <div className="space-y-8 flex flex-col items-center justify-center max-w-xl mx-auto">
-                    {generatedFoods
-                      .substring(generatedFoods.indexOf("1") + 3)
-                      .split("2.")
-                      .map((generatedBio) => {
-                        return (
-                          <div
-                            className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
-                            onClick={() => {
-                              navigator.clipboard.writeText(generatedBio);
-                              toast("Bio copied to clipboard", {
-                                icon: "✂️",
-                              });
-                            }}
-                            key={generatedBio}
-                          >
-                            <p>{generatedBio}</p>
-                          </div>
-                        );
-                      })}
+                    <div
+                      className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
+                      onClick={() => {
+                        navigator.clipboard.writeText(generatedResponse);
+                        toast("Response copied to clipboard", {
+                          icon: "✂️",
+                        });
+                      }}
+                    >
+                      <p>{generatedResponse}</p>
+                    </div>
                   </div>
                 </>
               )}
