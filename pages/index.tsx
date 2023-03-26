@@ -30,10 +30,11 @@ const slide = {
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [request, setRequest] = useState("");
-  const [language, setLanguages] = useState<LanguageType>("English");
+  const [language, setLanguages] = useState<LanguageType>("Spanish");
+  const [resLanguage, setResLanguages] = useState<LanguageType>("English");
   const [generatedResponse, setGeneratedResponse] = useState("");
 
-  const prompt = `Hi ChatGPT, I need your help with a translation and explanation about a specific topic in ${language}. The topic is ${request}, and I need a thorough explanation in English.`;
+  const prompt = `Hi ChatGPT, I need your help with a translation and explanation about a specific topic from the language ${language}. The topic is ${request}, and I need a thorough explanation in ${resLanguage}.`;
 
   const showToast = () => {
     toast("Please enter the topic you need help with.", {
@@ -106,7 +107,7 @@ const Home: NextPage = () => {
               className="mb-5 sm:mb-0"
             />
             <p className="text-left font-medium text-lg">
-              Enter the topic you need help with.
+              Enter the topic on which you need advice
             </p>
           </div>
           <textarea
@@ -116,14 +117,28 @@ const Home: NextPage = () => {
             className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
             placeholder={"e.g. French cuisine"}
           />
-          <div className="flex mb-5 items-center space-x-3">
+          <div className="flex mb-5 items-center space-x-3 ">
             <Image src="/2-black.png" width={30} height={30} alt="1 icon" />
-            <p className="text-left font-medium text-lg">Select the language</p>
+            <p className="text-left font-medium text-lg">
+              Select the language you need help with
+            </p>
           </div>
-          <div className="block">
+          <div className="block my-5">
             <DropDown
               vibe={language}
               setVibe={(newVibe) => setLanguages(newVibe)}
+            />
+          </div>
+          <div className="flex mb-5 items-center space-x-3">
+            <Image src="/2-black.png" width={30} height={30} alt="1 icon" />
+            <p className="text-left font-medium text-lg">
+              Select in which language you want to receive the answer
+            </p>
+          </div>
+          <div className="block">
+            <DropDown
+              vibe={resLanguage}
+              setVibe={(newVibe) => setResLanguages(newVibe)}
             />
           </div>
 
